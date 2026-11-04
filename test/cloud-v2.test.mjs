@@ -1,0 +1,30 @@
+import './test-root.cjs';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHmac,createHash,verify,createPublicKey} from 'node:crypto';
+import v2 from '../lib/cloud-v2.js';
+import util from '../lib/util.js';
+const vectors=JSON.parse(readFileSync(new URL('./fixtures/cloud-v2-vectors.json',import.meta.url)));
+const {userId,libraryEpoch}=vectors.inputs,key=v=>util.hexDecode(vectors.inputs[`K${v}_hex`]);
+export const trust={libraryEpoch,keyVersionFloor:0,keyCommitments:[1,2,3].map(v=>({keyVersion:v,commitment:vectors.commit[v],rotationProof:v===1?null:vectors.rotationProof[v]}))};
+test('SPEC vectors: LP, every commitment, rotation proof, attestation, transcript, SAS and raw signature',()=>{
+ assert.equal(util.hexEncode(v2.lp(...vectors.lp.fields)),vectors.lp.hex);
+ for(const version of [1,2,3])assert.equal(v2.commitment(key(version),userId,libraryEpoch,version),vectors.commit[version]);
+ for(const version of [2,3])assert.equal(v2.rotationProof(key(version-1),userId,libraryEpoch,version,vectors.commit[version]),vectors.rotationProof[version]);
+ assert.equal(v2.attest(key(3),userId,libraryEpoch,vectors.attest.deviceId,v2.base64(vectors.attest.spki_b64)),vectors.attest.mac);
+ const a=vectors.approval,bytes=v2.transcript({userId,libraryEpoch,...a,deviceId:a.requesterDeviceId,publicKeySpki:a.requesterSpki_b64,approverSpki:a.approverSpki_b64,requesterNonce:a.requesterNonce_b64,approverNonce:a.approverNonce_b64});
+ assert.equal(v2.approvalCommit(v2.base64(a.requesterSpki_b64),v2.base64(a.requesterNonce_b64)),a.commitment);
+ assert.equal(util.hexEncode(bytes),a.transcript_hex);assert.equal(util.hexEncode(v2.digest(bytes)),a.transcriptSha256_hex);assert.equal(v2.code(bytes),a.code);
+ assert(v2.verify(bytes,a.payload,a.signature_b64,a.approverSpki_b64));
+ const signature=v2.sign(bytes,a.payload,util.hexDecode(a.approverPrivateScalar_hex));assert(v2.verify(bytes,a.payload,signature,a.approverSpki_b64));
+ assert(verify('sha256',v2.lp('watchrss/approval-deliver/v2',v2.digest(bytes),util.utf8ToBytes(a.payload)),{key:createPublicKey({key:Buffer.from(a.approverSpki_b64,'base64'),format:'der',type:'spki'}),dsaEncoding:'ieee-p1363'},Buffer.from(signature,'base64')));
+ assert(!v2.verify(bytes,a.payload+' ',signature,a.approverSpki_b64));
+ assert.notEqual(v2.rotationProof(key(1),userId,libraryEpoch,3,vectors.commit[3]),vectors.rotationProof[3]);
+ assert.equal(v2.rotationProof(key(1),userId,libraryEpoch,3,vectors.commit[3]),vectors.negative.rotationProof3_with_wrong_prev);
+});
+test('atomic trust verification rejects wrong owner, epoch, missing predecessor, injected version and wrong proof',()=>{
+ const keys=new Map([1,2,3].map(v=>[v,key(v)]));assert.equal(v2.verifyKeys({userId,...trust,keys}).size,3);
+ for(const patch of [{userId:'other'},{libraryEpoch:'different'},{keys:new Map([[3,key(3)]])},{keyCommitments:trust.keyCommitments.map(row=>row.keyVersion===3?{...row,rotationProof:vectors.negative.rotationProof3_with_wrong_prev}:row)}])assert.throws(()=>v2.verifyKeys({userId,...trust,keys,...patch}));
+ assert.throws(()=>v2.verifyKeys({userId,...trust,keys:new Map([[99,key(3)]])}));
+});

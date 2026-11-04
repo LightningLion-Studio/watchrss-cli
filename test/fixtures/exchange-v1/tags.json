@@ -1,0 +1,39 @@
+[
+  {
+    "kind": "trust",
+    "domain": "watchrss/cloud/exchange/trust/v1",
+    "input": {
+      "version": 1,
+      "backend": "https://example.invalid",
+      "userId": "11111111-1111-4111-8111-111111111111",
+      "deviceId": "test-phone",
+      "publicKeySha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "libraryEpoch": "22222222-2222-4222-8222-222222222222",
+      "contentGeneration": "33333333-3333-4333-8333-333333333333",
+      "keyVersionFloor": 0,
+      "commitments": [],
+      "devices": [],
+      "envelopes": [],
+      "formatCapabilities": {}
+    },
+    "canonicalUtf8": "{\"backend\":\"https://example.invalid\",\"commitments\":[],\"contentGeneration\":\"33333333-3333-4333-8333-333333333333\",\"deviceId\":\"test-phone\",\"devices\":[],\"envelopes\":[],\"formatCapabilities\":{},\"keyVersionFloor\":0,\"libraryEpoch\":\"22222222-2222-4222-8222-222222222222\",\"publicKeySha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"userId\":\"11111111-1111-4111-8111-111111111111\",\"version\":1}",
+    "sha256": "17a80731cb05bab49f85e71abf4d18f54d839a6cba994f31f407acfbc0ecd2dc"
+  },
+  {
+    "kind": "heads",
+    "domain": "watchrss/cloud/exchange/heads/v1",
+    "input": {
+      "version": 1,
+      "backend": "https://example.invalid",
+      "userId": "11111111-1111-4111-8111-111111111111",
+      "deviceId": "test-phone",
+      "publicKeySha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "libraryEpoch": "22222222-2222-4222-8222-222222222222",
+      "contentGeneration": "33333333-3333-4333-8333-333333333333",
+      "visibleReaderHeads": false,
+      "heads": []
+    },
+    "canonicalUtf8": "{\"backend\":\"https://example.invalid\",\"contentGeneration\":\"33333333-3333-4333-8333-333333333333\",\"deviceId\":\"test-phone\",\"heads\":[],\"libraryEpoch\":\"22222222-2222-4222-8222-222222222222\",\"publicKeySha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"userId\":\"11111111-1111-4111-8111-111111111111\",\"version\":1,\"visibleReaderHeads\":false}",
+    "sha256": "d28d9267c567e45b855bb5b4d6e757f451cf81301c126189c58cab9a44757112"
+  }
+]

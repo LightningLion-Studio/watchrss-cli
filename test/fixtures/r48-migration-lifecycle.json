@@ -1,0 +1,85 @@
+{
+  "protocol": "watchrss-r48",
+  "vectorVersion": 1,
+  "warning": "PUBLIC SYNTHETIC TEST SECRETS. NEVER USE IN PRODUCTION.",
+  "mainStates": [
+    "planned",
+    "granted",
+    "running",
+    "awaiting_validation",
+    "accepted"
+  ],
+  "sideStates": [
+    "needs_grant",
+    "budget_exhausted",
+    "failed",
+    "cancelled",
+    "expired"
+  ],
+  "params": {
+    "planDefaultMillis": 86400000,
+    "planMaxMillis": 259200000,
+    "grantMaxMillis": 21600000,
+    "candidateMaxMillis": 1209600000,
+    "acceptedInputProtectionMillis": 2592000000,
+    "auditRetentionDays": 180
+  },
+  "cases": [
+    {
+      "event": "worker-restart-during-running",
+      "expected": "needs_grant"
+    },
+    {
+      "event": "budget-hit",
+      "expected": "budget_exhausted"
+    },
+    {
+      "event": "cancel-before-normal-complete",
+      "expected": "complete-rejected"
+    },
+    {
+      "event": "cancel-after-published-batch",
+      "expected": "keep-published-deny-rest"
+    },
+    {
+      "event": "grant-replay-same-session",
+      "expected": "reject"
+    },
+    {
+      "event": "grant-replay-other-session",
+      "expected": "reject"
+    },
+    {
+      "event": "R45-clear",
+      "expected": "invalidate-leases-and-candidates"
+    },
+    {
+      "event": "cancel-unaccepted",
+      "expected": "release-running-input-lease"
+    },
+    {
+      "event": "sample-accept-release-before-30d",
+      "expected": "reject"
+    },
+    {
+      "event": "full-accept-release",
+      "expected": "allow"
+    },
+    {
+      "event": "plan-expiry-at-24h-with-result",
+      "expected": "no-new-grant-result-validation-allowed-until-candidate-deadline"
+    },
+    {
+      "event": "latest-head-changed-input-descriptor",
+      "expected": "keep-newer-skip-object"
+    },
+    {
+      "event": "accept-same-request-twice",
+      "expected": "same-result"
+    },
+    {
+      "event": "records-in-scope",
+      "expected": "reject"
+    }
+  ]
+}

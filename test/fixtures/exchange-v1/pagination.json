@@ -1,0 +1,38 @@
+{
+  "initialHead": "5",
+  "request": {
+    "after": "0",
+    "limit": 2,
+    "ackAfter": "0"
+  },
+  "firstPage": {
+    "cursor": "2",
+    "frozenHead": "5",
+    "hasMore": true,
+    "orderedRevisions": [
+      "1",
+      "2"
+    ]
+  },
+  "nextRequest": {
+    "after": "2",
+    "frozenHead": "5",
+    "cursorFloor": "0",
+    "ackAfter": "2",
+    "recordsGeneration": "REUSE_FIRST_RESPONSE"
+  },
+  "concurrentReplacement": {
+    "oldRevision": "3",
+    "newHead": "6",
+    "status": 409,
+    "error": "cloud_exchange_window_changed",
+    "acknowledgedCursor": "0"
+  },
+  "budget": {
+    "min": 16384,
+    "max": 262144,
+    "default": 131072,
+    "singleTooLargeError": "cloud_exchange_budget_too_small",
+    "wholeCASRolledBack": true
+  }
+}

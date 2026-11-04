@@ -1,0 +1,43 @@
+{
+  "defaultEnabled": false,
+  "flags": {
+    "env": "WATCHRSS_CLOUD_SYNC_EXCHANGE_V1",
+    "allowlist": "WATCHRSS_CLOUD_SYNC_EXCHANGE_USERS"
+  },
+  "matrix": [
+    {
+      "client": "old",
+      "enabled": false,
+      "behavior": "all existing routes and DTO unchanged; capability field absent"
+    },
+    {
+      "client": "old",
+      "enabled": true,
+      "behavior": "existing routes unchanged; ignores optional capability"
+    },
+    {
+      "client": "new",
+      "enabled": false,
+      "behavior": "legacy chain; never infer from app version"
+    },
+    {
+      "client": "new",
+      "enabled": true,
+      "verifiedCache": false,
+      "behavior": "full bootstrap and chain validation required"
+    },
+    {
+      "client": "new",
+      "enabled": true,
+      "verifiedCache": true,
+      "behavior": "exchange only while scope/fences/tags valid"
+    },
+    {
+      "client": "new",
+      "enabled": true,
+      "allowlisted": false,
+      "behavior": "capability false; exchange 404 cloud_exchange_disabled"
+    }
+  ],
+  "phaseBExecutable": false
+}

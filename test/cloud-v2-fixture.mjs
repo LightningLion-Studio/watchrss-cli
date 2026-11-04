@@ -1,0 +1,3 @@
+import v2 from '../lib/cloud-v2.js';
+export const libraryEpoch='9b2e7c41-0d3f-4a8b-b6c5-aabbccddeeff';
+export function bootstrapFixture(user='u',keys=[new Uint8Array(32).fill(9)]){return{contentGeneration:'22222222-2222-4222-8222-222222222222',contentClearedAt:null,contentEmpty:false,libraryEpoch,keyVersionFloor:0,keyCommitments:keys.map((k,i)=>{const version=i+1,commitment=v2.commitment(k,user,libraryEpoch,version);return{keyVersion:version,commitment,rotationProof:i?v2.rotationProof(keys[i-1],user,libraryEpoch,version,commitment):null};}),member:{readable:true,writable:true},devices:[],keyEnvelopes:[]};}

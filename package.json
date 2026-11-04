@@ -1,0 +1,17 @@
+{
+  "name": "watchrss-cli",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Agent-friendly encrypted WatchRSS cloud library CLI",
+  "bin": {
+    "watchrss": "bin/watchrss.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/*.test.cjs test/*.test.mjs",
+    "build": "node scripts/check.cjs",
+    "ci:check": "npm test && npm run build"
+  }
+}

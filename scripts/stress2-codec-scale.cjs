@@ -1,0 +1,7 @@
+'use strict';
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawnSync}=require('node:child_process');
+if(!process.env.TEST_CODEC_SIZE){const results=[];for(const n of [1,2,4,8]){const r=spawnSync(process.execPath,[__filename],{env:{...process.env,TEST_CODEC_SIZE:String(n)},encoding:'utf8'});if(r.status)throw Error(r.stderr);results.push(JSON.parse(r.stdout));}console.log(JSON.stringify(results,null,2));}else{
+ process.env.WATCHRSS_HOME=fs.mkdtempSync(path.join(os.tmpdir(),'watchrss-codec-'));
+ const crypto=require('../lib/crypto'),snapshot=require('../lib/snapshot'),size=Number(process.env.TEST_CODEC_SIZE)*1048576;
+ (async()=>{await crypto.initializeRandom();const data=crypto.randomBytes(size),key=crypto.randomBytes(32),cpu=process.cpuUsage(),start=performance.now();const made=await snapshot.create({accountKey:key,keyVersion:1,sourceDeviceId:'synthetic-device',deviceSequence:1,settings:{snapshotContentLayout:3},logicalObjects:[{name:'notes-state.json',bytes:data,compress:true}]});console.log(JSON.stringify({size,ms:performance.now()-start,cpu:process.cpuUsage(cpu),maxRSSKiB:process.resourceUsage().maxRSS,chunkBytes:Object.values(made.newCiphertextChunks).reduce((n,b)=>n+b.length,0),chunks:Object.keys(made.newCiphertextChunks).length}));key.fill(0);fs.rmSync(process.env.WATCHRSS_HOME,{recursive:true,force:true});})().catch(e=>{console.error(e.message);process.exitCode=1;});
+}

@@ -1,0 +1,58 @@
+{
+  "defaults": {
+    "version": 1,
+    "deviceId": "test-phone",
+    "after": "0",
+    "libraryEpoch": "22222222-2222-4222-8222-222222222222",
+    "contentGeneration": "33333333-3333-4333-8333-333333333333"
+  },
+  "validRevisions": [
+    "0",
+    "1",
+    "9223372036854775807"
+  ],
+  "invalidRevisions": [
+    "",
+    "01",
+    "-1",
+    "+1",
+    "9223372036854775808"
+  ],
+  "limits": {
+    "items": [
+      1,
+      100
+    ],
+    "responseBytes": [
+      16384,
+      262144
+    ]
+  },
+  "cases": [
+    {
+      "name": "warm-noop",
+      "requests": 1,
+      "maxEntityBytes": 8192
+    },
+    {
+      "name": "concurrent-frozen-head-change",
+      "status": 409,
+      "error": "cloud_exchange_window_changed",
+      "ackAdvances": false
+    },
+    {
+      "name": "CAS-conflict",
+      "status": 409,
+      "error": "cloud_record_conflict",
+      "batchWrites": 0,
+      "ackAdvances": false
+    },
+    {
+      "name": "tiny-first-item-budget",
+      "status": 413,
+      "error": "cloud_exchange_budget_too_small",
+      "batchWrites": 0,
+      "ackAdvances": false
+    }
+  ]
+}

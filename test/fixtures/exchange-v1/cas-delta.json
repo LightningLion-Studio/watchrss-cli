@@ -1,0 +1,101 @@
+{
+  "initialLegacyWrite": {
+    "formatVersion": 1,
+    "items": [
+      {
+        "recordId": "0000000000000000000000000000000000000000000000000000000000000001",
+        "expectedRevision": "0",
+        "envelope": {
+          "algorithm": "A256GCM",
+          "keyVersion": 1,
+          "nonceBase64": "AAAAAAAAAAAAAAAA",
+          "ciphertextBase64": "AQEBAQEBAQEBAQEBAQEBAQ=="
+        },
+        "tombstone": false
+      }
+    ]
+  },
+  "exchangeWrite": {
+    "formatVersion": 1,
+    "items": [
+      {
+        "recordId": "0000000000000000000000000000000000000000000000000000000000000002",
+        "expectedRevision": "0",
+        "envelope": {
+          "algorithm": "A256GCM",
+          "keyVersion": 1,
+          "nonceBase64": "AAAAAAAAAAAAAAAA",
+          "ciphertextBase64": "AgICAgICAgICAgICAgICAg=="
+        },
+        "tombstone": false
+      }
+    ]
+  },
+  "expected": {
+    "status": 200,
+    "orderedRevisions": [
+      "1",
+      "2"
+    ],
+    "cursor": "2",
+    "headRevision": "2",
+    "frozenHead": "2",
+    "writeAck": [
+      {
+        "recordId": "0000000000000000000000000000000000000000000000000000000000000002",
+        "revision": "2"
+      }
+    ],
+    "acknowledgedCursor": "0",
+    "hasMore": false
+  },
+  "conflictWrite": {
+    "formatVersion": 1,
+    "items": [
+      {
+        "recordId": "0000000000000000000000000000000000000000000000000000000000000002",
+        "expectedRevision": "0",
+        "envelope": {
+          "algorithm": "A256GCM",
+          "keyVersion": 1,
+          "nonceBase64": "AAAAAAAAAAAAAAAA",
+          "ciphertextBase64": "AgICAgICAgICAgICAgICAg=="
+        },
+        "tombstone": false
+      },
+      {
+        "recordId": "0000000000000000000000000000000000000000000000000000000000000003",
+        "expectedRevision": "0",
+        "envelope": {
+          "algorithm": "A256GCM",
+          "keyVersion": 1,
+          "nonceBase64": "AAAAAAAAAAAAAAAA",
+          "ciphertextBase64": "AwMDAwMDAwMDAwMDAwMDAw=="
+        },
+        "tombstone": false
+      }
+    ]
+  },
+  "expectedConflict": {
+    "status": 409,
+    "error": "cloud_record_conflict",
+    "headRevision": "2",
+    "conflictItems": [
+      {
+        "recordId": "0000000000000000000000000000000000000000000000000000000000000002",
+        "envelope": {
+          "algorithm": "A256GCM",
+          "keyVersion": 1,
+          "nonceBase64": "AAAAAAAAAAAAAAAA",
+          "ciphertextBase64": "AgICAgICAgICAgICAgICAg=="
+        },
+        "tombstone": false,
+        "revision": "2",
+        "bytes": 28
+      }
+    ],
+    "conflictItemsTruncated": false,
+    "batchWrites": 0,
+    "ackAdvances": false
+  }
+}
